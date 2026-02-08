@@ -57,5 +57,5 @@
 
 <p>Se tiver alguma dúvida ou precisar de ajuda, não hesite em entrar em contato conosco.</p>
 
-<p>Atenciosamente,<br><strong>Equipe Nox Scheduler</strong></p>
+<p>Atenciosamente,<br><strong>Equipe PontoA</strong></p>
 

@@ -2,7 +2,7 @@
 
 ## Visão Geral
 
-O sistema de recorrências do Nox Scheduler gerencia assinaturas de empresas com suporte a períodos grátis (trial), cobranças automáticas e controle de estados de assinatura. O fluxo é executado através de um comando agendado que verifica e processa as cobranças periodicamente.
+O sistema de recorrências do PontoA gerencia assinaturas de empresas com suporte a períodos grátis (trial), cobranças automáticas e controle de estados de assinatura. O fluxo é executado através de um comando agendado que verifica e processa as cobranças periodicamente.
 
 ## Componentes Principais
 

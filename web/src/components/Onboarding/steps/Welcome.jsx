@@ -5,7 +5,7 @@ export function Welcome({ onNext, isFirstStep }) {
     <div className="text-center py-8">
       <div className="text-6xl mb-6">🎉</div>
       <h3 className="text-3xl font-bold text-gray-900 mb-4">
-        Bem-vindo ao Nox Agenda!
+        Bem-vindo ao PontoA!
       </h3>
       <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
         Vamos configurar sua conta em poucos passos simples. Este processo é rápido 

@@ -30,7 +30,7 @@ trait WithCompanySetup
     protected function setupCompany(): Company
     {
         $companyName = $this->faker->company();
-        $domain = Str::slug($companyName).'-'.uniqid().'.noxagenda.com.br';
+        $domain = Str::slug($companyName).'-'.uniqid().'.pontoa.com.br';
 
         $this->company = Company::create([
             'name' => $companyName,

@@ -32,7 +32,7 @@ class UserRegistration extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Seja muito bem-vind@ ao Nox',
+            subject: 'Seja muito bem-vind@ ao PontoA',
         );
     }
 

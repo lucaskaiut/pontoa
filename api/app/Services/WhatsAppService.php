@@ -62,7 +62,7 @@ final class WhatsAppService
         $webhookPayload = [
             'webhook' => [
                 'enabled' => true,
-                'url' => 'https://api.noxagenda.com.br/api/webhooks/whatsapp',
+                'url' => 'https://api.pontoa.com.br/api/webhooks/whatsapp',
                 'byEvents' => false,
                 'base64' => false,
                 'events' => [

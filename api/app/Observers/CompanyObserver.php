@@ -9,7 +9,7 @@ class CompanyObserver
 {
     public function creating(Company $company)
     {
-        $company->domain = Str::slug($company->name) . '.noxagenda.com.br';
+        $company->domain = Str::slug($company->name) . '.pontoa.com.br';
         $company->parent_id = 1;
     }
 }

@@ -42,7 +42,7 @@ export function TermsModal({ isOpen, onClose }) {
             </p>
 
             <p className="mb-6">
-              Ao realizar o cadastro e utilizar a plataforma <strong>Nox Agenda</strong>,
+              Ao realizar o cadastro e utilizar a plataforma <strong>PontoA</strong>,
               o usuário declara que leu, compreendeu e concorda integralmente com os presentes
               Termos e Condições de Uso. Caso não concorde com qualquer cláusula, o uso da
               plataforma deverá ser imediatamente interrompido.
@@ -131,7 +131,7 @@ export function TermsModal({ isOpen, onClose }) {
             <h2 className="text-xl font-bold text-gray-900 mt-6 mb-3">9. Propriedade Intelectual</h2>
             <p className="mb-6 text-gray-700">
               Todo o sistema, marca, layout, código, funcionalidades e conteúdos pertencem
-              exclusivamente à <strong>Nox Agenda</strong>, sendo vedada qualquer
+              exclusivamente à <strong>PontoA</strong>, sendo vedada qualquer
               reprodução ou uso não autorizado.
             </p>
 

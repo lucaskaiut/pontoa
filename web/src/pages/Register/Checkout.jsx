@@ -265,7 +265,7 @@ export const Checkout = ({ submit, previousStep, data }) => {
                   </p>
                 </div>
                 <p className="text-gray-900 font-semibold mb-1">
-                  Nox Agenda • {currentPlanLabel} • {currentPlanRecurrenceLabel}
+                  PontoA • {currentPlanLabel} • {currentPlanRecurrenceLabel}
                 </p>
                 <p className="text-sm text-gray-700 font-bold mb-1">
                   R${" "}

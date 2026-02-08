@@ -150,7 +150,7 @@ export function Register () {
                         <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
                             Crie sua conta no{' '}
                             <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-blue-600">
-                                Nox Agenda
+                                PontoA
                             </span>
                         </h1>
                         <p className="text-gray-600 text-lg">

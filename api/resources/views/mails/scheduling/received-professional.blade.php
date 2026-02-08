@@ -52,5 +52,5 @@
     <li>Prepare-se com antecedência para o atendimento</li>
 </ul>
 
-<p>Atenciosamente,<br><strong>{{ $scheduling->company->name ?? 'Equipe Nox' }}</strong></p>
+<p>Atenciosamente,<br><strong>{{ $scheduling->company->name ?? 'Equipe PontoA' }}</strong></p>
 

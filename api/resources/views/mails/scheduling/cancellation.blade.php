@@ -11,5 +11,5 @@
 
 <p>Se você tiver alguma dúvida ou precisar reagendar, entre em contato conosco.</p>
 
-<p>Atenciosamente,<br>Equipe Nox</p>
+<p>Atenciosamente,<br>Equipe PontoA</p>
 

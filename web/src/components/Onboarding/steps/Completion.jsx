@@ -72,7 +72,7 @@ export function Completion({ onNext, isCompleting }) {
         disabled={isCompleting}
         className="bg-linear-to-r from-purple-400 to-blue-500 text-white px-12 py-4 rounded-full font-semibold text-lg hover:shadow-lg transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isCompleting ? 'Finalizando...' : 'Começar a Usar o Nox Agenda'}
+        {isCompleting ? 'Finalizando...' : 'Começar a Usar o PontoA'}
       </button>
 
       <p className="text-sm text-gray-500 mt-6">

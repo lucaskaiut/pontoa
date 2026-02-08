@@ -1,4 +1,4 @@
-# Sistema de Design - Nox Scheduler
+# Sistema de Design - PontoA
 
 Sistema de design moderno e escalável baseado em Design Atômico, utilizando Tailwind CSS.
 

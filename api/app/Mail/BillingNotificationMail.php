@@ -42,8 +42,8 @@ class BillingNotificationMail extends Mailable
     public function envelope(): Envelope
     {
         $subject = $this->isInTrialPeriod
-            ? 'Seu período grátis está chegando ao fim - Nox Scheduler'
-            : 'Lembrete: Cobrança em 3 dias - Nox Scheduler';
+            ? 'Seu período grátis está chegando ao fim - PontoA'
+            : 'Lembrete: Cobrança em 3 dias - PontoA';
 
         return new Envelope(
             subject: $subject,

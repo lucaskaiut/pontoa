@@ -123,7 +123,7 @@ Um fluxo completo de onboarding para novas empresas com 6 etapas interativas e t
 
 - **Design moderno**: Gradientes, sombras, bordas arredondadas
 - **Icones**: Emojis para representar cada etapa
-- **Cores**: Purple/Blue gradient (tema do Nox Agenda)
+- **Cores**: Purple/Blue gradient (tema do PontoA)
 - **Animações**: Transições suaves
 - **Modal overlay**: Fundo escuro com blur
 

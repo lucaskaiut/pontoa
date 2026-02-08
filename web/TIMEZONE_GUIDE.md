@@ -1,4 +1,4 @@
-# Guia de Timezone no Sistema Nox Scheduler
+# Guia de Timezone no Sistema PontoA
 
 ## Estratégia Geral
 

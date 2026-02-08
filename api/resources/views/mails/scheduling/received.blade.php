@@ -52,5 +52,5 @@
 
 <p>Estamos à sua disposição para qualquer esclarecimento.</p>
 
-<p>Atenciosamente,<br><strong>{{ $scheduling->company->name ?? 'Equipe Nox' }}</strong></p>
+<p>Atenciosamente,<br><strong>{{ $scheduling->company->name ?? 'Equipe PontoA' }}</strong></p>
 

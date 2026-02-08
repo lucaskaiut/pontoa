@@ -214,7 +214,7 @@ final class PagarmeCreditCard extends PagarmeAbstract
             'items' => [
                 [
                     'amount' => (int) ($amountToCharge * 100),
-                    'description' => 'Renovação automática do Nox Scheduler',
+                    'description' => 'Renovação automática do PontoA',
                     'quantity' => 1,
                     'code' => $planCode,
                 ],

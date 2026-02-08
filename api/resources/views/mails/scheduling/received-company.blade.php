@@ -67,5 +67,5 @@
 </ul>
 @endif
 
-<p>Atenciosamente,<br><strong>{{ $scheduling->company->name ?? 'Equipe Nox' }}</strong></p>
+<p>Atenciosamente,<br><strong>{{ $scheduling->company->name ?? 'Equipe PontoA' }}</strong></p>
 

@@ -1,6 +1,6 @@
 # Documentação do Projeto
 
-Bem-vindo à documentação do projeto Nox Scheduler.
+Bem-vindo à documentação do projeto PontoA.
 
 ## 📚 Documentos Disponíveis
 

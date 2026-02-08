@@ -64,7 +64,7 @@ export function Onboarding({ onComplete }) {
         user.company.onboarding_completed = true;
       }
       
-      toast.success('Configuração inicial concluída! Bem-vindo ao Nox Agenda!');
+      toast.success('Configuração inicial concluída! Bem-vindo ao PontoA!');
       onComplete();
     } catch (error) {
       console.error('Erro ao completar onboarding:', error);

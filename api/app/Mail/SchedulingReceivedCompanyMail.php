@@ -24,7 +24,7 @@ class SchedulingReceivedCompanyMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Novo agendamento recebido - ' . ($this->scheduling->company->name ?? 'Nox'),
+            subject: 'Novo agendamento recebido - ' . ($this->scheduling->company->name ?? 'PontoA'),
         );
     }
 

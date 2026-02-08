@@ -381,7 +381,7 @@ class AppointmentExecutionControllerTest extends TestCase
         $this->setupAuthenticatedUser([Permissions::MANAGE_APPOINTMENT_EXECUTIONS]);
         $this->authenticatedUser->update(['is_collaborator' => true]);
 
-        $otherCompanyDomain = 'other-company-'.uniqid().'.noxagenda.com.br';
+        $otherCompanyDomain = 'other-company-'.uniqid().'.pontoa.com.br';
         $otherCompany = Company::create([
             'name' => 'Other Company',
             'email' => 'other@example.com',

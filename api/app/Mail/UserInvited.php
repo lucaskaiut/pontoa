@@ -34,7 +34,7 @@ class UserInvited extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Você foi convidado para a Nox',
+            subject: 'Você foi convidado para a PontoA',
         );
     }
 
