@@ -1,0 +1,30 @@
+00:40:42.646 
+src/pages/UserProfilePage.tsx(219,12): error TS6133: 'formatPrice' is declared but its value is never read.
+00:40:42.647 
+src/pages/UserProfilePage.tsx(226,12): error TS6133: 'formatDuration' is declared but its value is never read.
+00:40:42.648 
+src/pages/UserProfilePage.tsx(305,18): error TS18047: 'collaborator' is possibly 'null'.
+00:40:42.648 
+src/pages/UserProfilePage.tsx(307,26): error TS18047: 'collaborator' is possibly 'null'.
+00:40:42.648 
+src/pages/UserProfilePage.tsx(308,26): error TS18047: 'collaborator' is possibly 'null'.
+00:40:42.648 
+src/pages/UserProfilePage.tsx(313,34): error TS18047: 'collaborator' is possibly 'null'.
+00:40:42.649 
+src/pages/UserProfilePage.tsx(321,18): error TS18047: 'collaborator' is possibly 'null'.
+00:40:42.649 
+src/pages/UserProfilePage.tsx(324,16): error TS18047: 'collaborator' is possibly 'null'.
+00:40:42.649 
+src/pages/UserProfilePage.tsx(327,54): error TS18047: 'collaborator' is possibly 'null'.
+00:40:42.649 
+src/pages/UserProfilePage.tsx(332,18): error TS18047: 'collaborator' is possibly 'null'.
+00:40:42.649 
+src/pages/UserProfilePage.tsx(337,28): error TS18047: 'collaborator' is possibly 'null'.
+00:40:42.650 
+src/pages/UserProfilePage.tsx(341,18): error TS18047: 'collaborator' is possibly 'null'.
+00:40:42.650 
+src/pages/UserProfilePage.tsx(346,40): error TS18047: 'collaborator' is possibly 'null'.
+00:40:42.651 
+src/services/CollaboratorsService.ts(22,39): error TS2322: Type 'unknown' is not assignable to type 'Collaborator | null'.
+00:40:43.463 
+error Command failed with exit code 2.

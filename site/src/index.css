@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  /* Layout claro, mas com leve profundidade */
+  --color-background: #f3f0ff;      /* Lilás bem claro, quase branco */
+  --color-surface: #ffffff;         /* Cartões e containers principais */
+
+  /* Violeta suave como cor principal */
+  --color-primary: #a855f7;         /* Violeta médio, mais luminoso */
+  --color-primary-hover: #c084fc;   /* Hover levemente mais claro e quente */
+
+  /* Tipografia com bom contraste */
+  --color-text-primary: #111827;    /* Títulos e textos principais */
+  --color-text-secondary: #6b7280;  /* Textos de apoio */
+
+  /* Acentos e estados */
+  --color-accent-soft: #f4ebff;     /* Fundo suave para destaques/avisos */
+  --color-success: #16a34a;
+  --color-danger: #dc2626;
+  --color-warning: #eab308;
+
+  /* Utilitárias */
+  --color-light-primary: #ede9fe;
+  --color-dark: #111827;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+html, body {
+  height: 100%;
+}
+
+#root {
+  min-height: 100%;
+  width: 100%;
+  background: var(--color-background);
+  color: var(--color-text-primary);
+  overflow-y: auto;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

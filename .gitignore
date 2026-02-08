@@ -1,0 +1,6 @@
+dockerfiles/mariadb
+node_modules
+.env
+api/.cursorrules
+.cursor/
+.cursorrules
