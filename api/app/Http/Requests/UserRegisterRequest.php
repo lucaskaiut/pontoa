@@ -36,26 +36,6 @@ class UserRegisterRequest extends FormRequest
             'company.document' => 'required|unique:App\Models\Company,document',
             'company.logo' => 'sometimes|string',
             'company.banner' => 'sometimes|string',
-            // Support both old format (plan) and new format (plan_type + plan_recurrence)
-            'company.plan' => [
-                'sometimes',
-                function ($attribute, $value, $fail) {
-                    if ($value && ! in_array($value, ['monthly', 'quarterly', 'yearly'])) {
-                        $fail("The {$attribute} must be one either monthly, quarterly or yearly");
-                    }
-                },
-            ],
-            'company.plan_type' => 'sometimes|in:basic,pro',
-            'company.plan_recurrence' => 'sometimes|in:monthly,yearly',
-            'company.address' => 'sometimes|array',
-            'company.address.postcode' => 'required_with:company.address|string|size:8',
-            'company.address.address' => 'required_with:company.address|string',
-            'company.address.number' => 'required_with:company.address|string',
-            'company.address.complement' => 'nullable|string',
-            'company.address.district' => 'required_with:company.address|string',
-            'company.address.region' => 'required_with:company.address|string|size:2',
-            'company.address.city' => 'required_with:company.address|string',
-            // 'company.credit_card' => 'required|array',
             'user' => 'required',
             'user.name' => 'required',
             'user.email' => [

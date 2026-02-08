@@ -48,40 +48,15 @@ final class RegisterService
     public function handle(array $data): User
     {
         return DB::transaction(function () use ($data) {
-            request()->merge(['use_platform_payment' => true]);
+            $planData = $this->processPlanData();
 
-            $companyData = collect($data['company'])->except(['credit_card', 'address'])->all();
+            unset($data['company']['plan_type']);
 
-            $planData = $this->processPlanData($companyData);
+            $data['company'] = array_merge($data['company'], $planData);
 
-            unset($companyData['plan_type']);
-
-            $companyData = array_merge($companyData, $planData);
-
-            $company = $this->companyService->create($companyData);
+            $company = $this->companyService->create($data['company']);
 
             app('company')->registerCompany($company);
-
-            $addressId = null;
-            if (isset($data['company']['address']) && $data['company']['address']) {
-                $address = $company->addresses()->create($data['company']['address']);
-                $addressId = $address->id;
-            }
-
-            if (isset($data['company']['credit_card']) && $data['company']['credit_card']) {
-                $creditCardData = $data['company']['credit_card'];
-
-                $paymentMethod = $this->getPaymentMethod();
-                $token = $this->paymentService->createToken($paymentMethod, $creditCardData);
-
-                $creditCardData['token'] = $token;
-                if ($addressId) {
-                    $creditCardData['address_id'] = $addressId;
-                }
-                $card = $this->creditCardService->create($creditCardData, $company);
-
-                $company->update(['card_id' => $card->id]);
-            }
 
             $user = $this->userService->create($data['user']);
 
@@ -94,16 +69,6 @@ final class RegisterService
 
             return $user->load('roles');
         });
-    }
-
-    private function getPaymentMethod(): string
-    {
-        $settings = json_decode(config('app.payment_method', '{}'), true);
-        $activeMethod = $settings['active'] ?? 'PagarmeCreditCard';
-
-        $methodName = lcfirst($activeMethod);
-
-        return $methodName;
     }
 
     private function createAdminRole($company): Role
@@ -120,47 +85,19 @@ final class RegisterService
 
     /**
      * Process plan data from registration
-     * Supports both old format (plan: 'monthly'/'yearly') and new format (plan_type + plan_recurrence)
+     * Supports format (plan_type + plan_recurrence)
      */
-    private function processPlanData(array $companyData): array
+    private function processPlanData(): array
     {
-        // Handle new format: plan_type + plan_recurrence
-        if (isset($companyData['plan_type']) && isset($companyData['plan_recurrence'])) {
-            $planType = $companyData['plan_type'];
-            $recurrence = $companyData['plan_recurrence'];
-        }
-        // Handle legacy format: plan as recurrence (monthly/yearly)
-        elseif (isset($companyData['plan']) && in_array($companyData['plan'], ['monthly', 'yearly'])) {
-            $planType = PlanType::BASIC->value; // Default to BASIC for legacy
-            $recurrence = $companyData['plan'];
-        }
-        // Fallback to defaults
-        else {
-            $planType = PlanType::BASIC->value;
-            $recurrence = RecurrenceType::MONTHLY->value;
-        }
-
-        try {
-            $planTypeEnum = PlanType::from($planType);
-            $recurrenceEnum = RecurrenceType::from($recurrence);
-        } catch (\ValueError $e) {
-            // Fallback to defaults
-            $planTypeEnum = PlanType::BASIC;
-            $recurrenceEnum = RecurrenceType::MONTHLY;
-        }
+        $planType = 'basic';
+        $recurrence = 'monthly';
+        $planTypeEnum = PlanType::from($planType);
+        $recurrenceEnum = RecurrenceType::from($recurrence);
 
         $plan = $this->planService->getPlanByTypeAndRecurrence(
             $planTypeEnum->value,
             $recurrenceEnum->value
         );
-
-        if (! $plan) {
-            // Final fallback
-            $plan = $this->planService->getPlanByTypeAndRecurrence(
-                PlanType::BASIC->value,
-                RecurrenceType::MONTHLY->value
-            );
-        }
 
         $now = \Carbon\Carbon::now();
         $trialEndDate = $this->planService->calculateTrialEndDate($now, $recurrenceEnum);
@@ -168,6 +105,7 @@ final class RegisterService
         $currentPeriodEnd = $trialEndDate->copy()->addDays($billingDays);
 
         return [
+            'plan' => $recurrenceEnum->value,
             'plan_name' => $planTypeEnum->value,
             'plan_recurrence' => $recurrenceEnum->value,
             'plan_price' => $plan->price,
