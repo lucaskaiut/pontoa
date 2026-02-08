@@ -4,14 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { UserForm } from './UserForm';
 import { CompanyForm } from './CompanyForm';
-import { Plan } from './Plan';
 import { Checkout } from './Checkout';
 import { analytics } from '../../services/analytics';
+import classNames from 'classnames';
 
 const STEPS_INFO = {
   userForm: { number: 1, title: 'Seus Dados', icon: '👤' },
   companyForm: { number: 2, title: 'Sua Empresa', icon: '🏢' },
-  plan: { number: 3, title: 'Plano', icon: '⭐' },
   checkout: { number: 4, title: 'Pagamento', icon: '💳' },
 };
 
@@ -31,9 +30,6 @@ export function Register() {
       email: '',
       phone: '',
       document: '',
-      plan: '',
-      plan_type: '',
-      plan_recurrence: '',
     },
   };
 
@@ -46,16 +42,12 @@ export function Register() {
     });
   };
 
-  const handleSubmit = async ({ card, address }) => {
+  const handleSubmit = async () => {
     try {
       const registerData = {
         use_platform_payment: true,
         user: { ...data },
-        company: {
-          ...data.company,
-          credit_card: card,
-          address: address,
-        },
+        company: data.company,
       };
 
       await register(registerData);
@@ -88,26 +80,17 @@ export function Register() {
     companyForm: {
       component: CompanyForm,
       props: {
-        nextStep: () => setStep('plan'),
+        nextStep: () => setStep('checkout'),
         previousStep: () => setStep('userForm'),
         setFieldValue: setFieldValue,
         data: data,
-      },
-    },
-    plan: {
-      component: Plan,
-      props: {
-        nextStep: () => setStep('checkout'),
-        previousStep: () => setStep('companyForm'),
-        setFieldValue,
-        data,
       },
     },
     checkout: {
       component: Checkout,
       props: {
         submit: handleSubmit,
-        previousStep: () => setStep('plan'),
+        previousStep: () => setStep('companyForm'),
         data,
       },
     },
@@ -135,7 +118,7 @@ export function Register() {
                 PontoA
               </span>
             </h1>
-            <p className="text-gray-600 text-lg">Configure em minutos e comece a conectar com</p>
+            <p className="text-gray-600 text-lg">Essas informações nos ajudam a criar um ambiente seguro e adequado para atender pessoas autistas.</p>
           </div>
 
           <div className="mb-8">

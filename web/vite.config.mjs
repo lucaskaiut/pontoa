@@ -1,5 +1,6 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 function removeUseClientDirective() {
   return {
@@ -11,31 +12,28 @@ function removeUseClientDirective() {
           .replace(/['"]use client['"];?\s*/g, '')
           .replace(/['"]use server['"];?\s*/g, '')
           .replace(/^['"]use client['"];?\s*$/gm, '')
-          .replace(/^['"]use server['"];?\s*$/gm, '')
-        
+          .replace(/^['"]use server['"];?\s*$/gm, '');
+
         if (cleanedCode !== code) {
           return {
             code: cleanedCode,
             map: null,
-          }
+          };
         }
       }
-      return null
+      return null;
     },
-  }
+  };
 }
 
 export default defineConfig(({ mode }) => {
-  const isDebug = mode === 'development'
-  
+  const isDebug = mode === 'development';
+
   return {
-    plugins: [
-      react(),
-      removeUseClientDirective(),
-    ],
+    plugins: [react(), tailwindcss(), removeUseClientDirective()],
     server: {
       host: true,
-      port: 3000
+      port: 3000,
     },
     build: {
       minify: !isDebug ? 'esbuild' : false,
@@ -49,9 +47,9 @@ export default defineConfig(({ mode }) => {
         },
         onwarn(warning, warn) {
           if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
-            return
+            return;
           }
-          warn(warning)
+          warn(warning);
         },
       },
       commonjsOptions: {
@@ -61,7 +59,7 @@ export default defineConfig(({ mode }) => {
     optimizeDeps: {
       include: ['@tanstack/react-query'],
       esbuildOptions: {
-        logOverride: { 
+        logOverride: {
           'this-is-undefined-in-esm': 'silent',
         },
       },
@@ -74,5 +72,5 @@ export default defineConfig(({ mode }) => {
       drop: isDebug ? [] : ['console', 'debugger'],
       legalComments: 'none',
     },
-  }
-})
+  };
+});

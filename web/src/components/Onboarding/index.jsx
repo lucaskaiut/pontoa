@@ -3,7 +3,6 @@ import toast from 'react-hot-toast';
 import { Welcome } from './steps/Welcome';
 import { ServiceStep } from './steps/ServiceStep';
 import { ScheduleStep } from './steps/ScheduleStep';
-import { WhatsAppStep } from './steps/WhatsAppStep';
 import { NotificationStep } from './steps/NotificationStep';
 import { Completion } from './steps/Completion';
 import { companyService } from '../../services/companyService';
@@ -13,7 +12,6 @@ const ONBOARDING_STEPS = [
   { id: 'welcome', title: 'Bem-vindo', component: Welcome },
   { id: 'services', title: 'Serviços', component: ServiceStep },
   { id: 'schedules', title: 'Horários', component: ScheduleStep },
-  { id: 'whatsapp', title: 'WhatsApp', component: WhatsAppStep },
   { id: 'notifications', title: 'Notificações', component: NotificationStep },
   { id: 'completion', title: 'Concluir', component: Completion },
 ];
