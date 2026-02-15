@@ -2,13 +2,10 @@
 import { LuShoppingCart, LuUser } from 'react-icons/lu';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { useCart } from '@/contexts/CartContext';
 
 export function Buttons() {
   const { isAuthenticated, user } = useAuth();
-  const { getQuantity } = useCart();
-
-  const cartQuantity = getQuantity();
+  const cartQuantity = 0;
 
   return (
     <div className="flex items-center gap-2">

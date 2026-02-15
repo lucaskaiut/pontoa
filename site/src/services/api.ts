@@ -17,22 +17,9 @@ const findData = (url: string, query?: PayloadType, headers?: HeadersInit): unkn
   return typeof endpoint === 'function' ? endpoint(query, headers) : endpoint;
 };
 
-const getPaymentMethod = async () => {
-  if (typeof window === 'undefined') {
-    const { cookies } = await import('next/headers');
-    const cookieStore = await cookies();
-
-    return cookieStore.get('selectedPaymentMethod')?.value || '';
-  }
-
-  return localStorage.getItem('selectedPaymentMethod') || '';
-};
-
 const enhanceHeaders = async (headers?: HeadersInit): Promise<HeadersInit> => {
-  const paymentMethod = await getPaymentMethod();
   return {
     ...headers,
-    ...(paymentMethod ? { 'x-payment-method': paymentMethod } : {}),
   };
 };
 
