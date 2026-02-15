@@ -7,20 +7,28 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { ProductCard } from './product';
+import { useBreakpoint } from '@/hooks/useBreakpoint';
 
 interface ProductsSwiperProps {
   products: Product[];
 }
 
 export function ProductsSwiper({ products }: ProductsSwiperProps) {
+  const breakpoint = useBreakpoint();
+  const slidesPerView = breakpoint === 'sm' ? 1 : 3;
   return (
     <Swiper
       modules={[Navigation]}
       spaceBetween={45}
-      slidesPerView={3}
+      slidesPerView={slidesPerView}
       navigation
       pagination={{ clickable: true }}
-      style={{ width: '100%', paddingBottom: '40px', paddingLeft: '10px', paddingRight: '30px' }}
+      style={{
+        width: '100%',
+        paddingBottom: '40px',
+        paddingLeft: '10px',
+        paddingRight: '30px',
+      }}
     >
       {products.map((product) => (
         <SwiperSlide key={product.id}>
