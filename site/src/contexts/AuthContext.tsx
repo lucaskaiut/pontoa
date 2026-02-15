@@ -2,7 +2,8 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { get, post } from '@/services/api';
-import { User } from '@/types/user';
+import { ApiResponse } from '@/types/api-response';
+import { User, UserWithToken } from '@/types/user';
 import Cookies from 'js-cookie';
 
 type AuthContextType = {
@@ -39,7 +40,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const user: User | null = await get('/user', {}, { Authorization: `Bearer ${authToken}` });
+    const { data: user } = await get<ApiResponse<User | null>>('/user', {}, {
+      Authorization: `Bearer ${authToken}`,
+    });
 
     setUser(user);
     setIsAuthenticated(!!user);
@@ -48,7 +51,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string, document?: string | undefined): Promise<boolean> => {
     setLoading(true);
-    const user: User & { Token: string } | null = await post('/login', { email, password, document });
+    const { data: user } = await post<ApiResponse<UserWithToken | null>>('/login', {
+      email,
+      password,
+      document,
+    });
 
     if (!user) {
       return false;
@@ -56,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     setUser(user);
     setIsAuthenticated(!!user);
-    Cookies.set('authToken', user?.Token);
+    Cookies.set('authToken', user.token);
 
     setLoading(false);
     return true;

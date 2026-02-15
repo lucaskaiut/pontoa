@@ -1,17 +1,22 @@
 import { cookies } from 'next/headers';
 import { get, post } from './api';
-import { User } from '@/types/user';
+import { ApiResponse } from '@/types/api-response';
+import { User, UserWithToken } from '@/types/user';
 
 const login = async (email: string, password: string, document?: string) => {
-  const response: User & { token: string } = await post('/login', { email, password, document });
+  const { data } = await post<ApiResponse<UserWithToken | null>>('/login', {
+    email,
+    password,
+    document,
+  });
 
-  if (!response) {
+  if (!data) {
     return false;
   }
 
   const cookie = await cookies();
 
-  cookie.set('authToken', response.token);
+  cookie.set('authToken', data.token);
 
   return true;
 };
@@ -23,7 +28,9 @@ const validateAuth = async () => {
     return null;
   }
 
-  const user: User | null = await get('/me', {}, { Authorization: `Bearer ${authToken}` });
+  const { data: user } = await get<ApiResponse<User | null>>('/me', {}, {
+    Authorization: `Bearer ${authToken}`,
+  });
 
   return user;
 };

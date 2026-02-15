@@ -4,36 +4,61 @@ import { Route } from '@/types/router';
 import { Shipping } from '@/types/shipping';
 import { Attribute } from '@/types/attribute';
 import { User, UserWithToken } from '@/types/user';
+import { Order } from '@/types/order';
+import { ApiListResponse, ApiResponse } from '@/types/api-response';
 import { categoriesByCompany } from './categories';
 import { mockProducts } from './products';
 import { attributesByCompany } from './attributes';
 import { users as fixedUsers } from './users';
 import { orders } from './orders';
 
+const basePath = '/api';
+
+const listResponse = <T>(data: T[], total?: number): ApiListResponse<T> => ({
+  data,
+  links: {
+    first: `${basePath}?page=1`,
+    last: `${basePath}?page=1`,
+    prev: '',
+    next: '',
+  },
+  meta: {
+    current_page: 1,
+    from: data.length ? 1 : 0,
+    last_page: 1,
+    path: basePath,
+    per_page: data.length,
+    to: data.length,
+    total: total ?? data.length,
+  },
+});
+
+const itemResponse = <T>(data: T): ApiResponse<T> => ({ data });
+
 const user = (
   body?: Record<string, string | number | boolean>,
   headers?: HeadersInit
-): User | null => {
+): ApiResponse<User | null> => {
   const authorization =
     headers && typeof headers === 'object' && !(headers instanceof Headers)
       ? (headers as Record<string, string>)['Authorization']
       : undefined;
   const searchUser =
     fixedUsers.find((user) => user.token == authorization?.replace('Bearer ', '')) ?? null;
-  return searchUser;
+  return itemResponse(searchUser);
 };
 
 const login = (
   body?: Record<string, string | number | boolean>,
   headers?: HeadersInit
-): UserWithToken | null => {
+): ApiResponse<UserWithToken | null> => {
   const searchUser = fixedUsers.find((user) => user.email == body?.email);
 
   if (!searchUser) {
-    return null;
+    return itemResponse(null);
   }
 
-  return { ...searchUser, token: 'bHVjYXMua2FpdXRAZ21haWwuY29t' };
+  return itemResponse({ ...searchUser, token: 'bHVjYXMua2FpdXRAZ21haWwuY29t' });
 };
 
 const getApiUrl = (): string => {
@@ -42,38 +67,34 @@ const getApiUrl = (): string => {
   return apiUrl ?? '';
 };
 
-const categories = (): Category[] => {
+const categories = (): ApiListResponse<Category> => {
   const companyId = getApiUrl();
 
-  return categoriesByCompany[companyId];
+  return listResponse(categoriesByCompany[companyId] ?? []);
 };
 
-const attributes = (): Attribute[] => {
+const attributes = (): ApiListResponse<Attribute> => {
   const companyId = getApiUrl();
 
-  return attributesByCompany[companyId];
+  return listResponse(attributesByCompany[companyId] ?? []);
 };
 
-const relatedProducts = (): Product[] | [] => {
-  return mockProducts;
+const relatedProducts = (): ApiListResponse<Product> => {
+  return listResponse(mockProducts);
 };
 
-const products = (query?: Record<string, string | number | boolean>): Product[] | [] => {
+const products = (query?: Record<string, string | number | boolean>): ApiListResponse<Product> => {
+  let data: Product[] = mockProducts;
+
   if (query?.featured) {
-    return mockProducts.filter((product) => product.isFeatured == query.featured);
-  }
-
-  if (query?.new) {
-    return mockProducts.filter((product) => product.isNew == query.new);
-  }
-
-  if (query?.category) {
-    return mockProducts.filter((product) =>
+    data = mockProducts.filter((product) => product.isFeatured == query.featured);
+  } else if (query?.new) {
+    data = mockProducts.filter((product) => product.isNew == query.new);
+  } else if (query?.category) {
+    data = mockProducts.filter((product) =>
       product.categories?.some((category) => category.id === query.category)
     );
-  }
-
-  if (query?.searchTerm) {
+  } else if (query?.searchTerm) {
     const searchTerm = query.searchTerm as string;
 
     const normalize = (text: string) =>
@@ -82,47 +103,43 @@ const products = (query?: Record<string, string | number | boolean>): Product[] 
         .replace(/[\u0300-\u036f]/g, '')
         .toLowerCase();
 
-    const terms = normalize(searchTerm).split(/\s+/).filter(Boolean); // garante que não tenha termos vazios
+    const terms = normalize(searchTerm).split(/\s+/).filter(Boolean);
 
-    return mockProducts.filter((product) => {
+    data = mockProducts.filter((product) => {
       const name = normalize(product.name);
       return terms.every((term) => name.includes(term));
     });
   }
 
-  return mockProducts;
+  return listResponse(data);
 };
 
 const router = (
   query?: Record<string, string | number | boolean>,
   headers?: HeadersInit
-): Route | {} => {
+): ApiResponse<Route | Record<string, never>> => {
   if (!query) {
-    return {};
+    return itemResponse({});
   }
 
-  const product = products().find((product) => product.url == query.url);
+  const productsData = products().data;
+  const product = productsData.find((p) => p.url == query.url);
 
   if (product) {
-    return {
-      type: 'product',
-      product,
-    };
+    return itemResponse({ type: 'product', product });
   }
 
-  const category = categories().find((category) => category.url == query.url);
+  const categoriesData = categories().data;
+  const category = categoriesData.find((c) => c.url == query.url);
 
   if (category) {
-    return {
-      type: 'category',
-      category,
-    };
+    return itemResponse({ type: 'category', category });
   }
 
-  return {};
+  return itemResponse({});
 };
 
-const shipping: Shipping[] = [
+const shippingList: Shipping[] = [
   {
     id: '1',
     carrier: 'Correios',
@@ -149,11 +166,17 @@ const shipping: Shipping[] = [
   },
 ];
 
+const shipping = (): ApiListResponse<Shipping> => listResponse(shippingList);
+
 type MockApi = {
   [key: string]: unknown | ((url: string) => unknown);
 };
+const ordersResponse = (): ApiListResponse<Order> => listResponse(orders);
+
 export const mockApi: MockApi = {
   '/user': (body?: Record<string, string | number | boolean>, headers?: HeadersInit) =>
+    user(body, headers),
+  '/me': (body?: Record<string, string | number | boolean>, headers?: HeadersInit) =>
     user(body, headers),
   '/login': (body?: Record<string, string | number | boolean>, headers?: HeadersInit) =>
     login(body, headers),
@@ -164,5 +187,5 @@ export const mockApi: MockApi = {
   '/shipping/quote': shipping,
   '/attributes': attributes,
   '/product/related': relatedProducts,
-  '/orders': orders,
+  '/orders': ordersResponse,
 };

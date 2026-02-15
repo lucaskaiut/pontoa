@@ -1,13 +1,15 @@
 import { Banner } from '@/components/banner';
+import { CatalogGrid } from '@/components/catalog/grid';
 import { ProductCardSkeleton } from '@/components/catalog/skeletons/product-card-skeleton';
 import { ProductsSwiper } from '@/components/catalog/swiper';
 import { Container } from '@/components/Container';
 import { get } from '@/services/api';
+import { ApiListResponse } from '@/types/api-response';
 import { Product } from '@/types/product';
 import { Suspense } from 'react';
 
 export default async function Home() {
-  const products = await get<Product[]>('/products', {
+  const { data: products } = await get<ApiListResponse<Product>>('/products', {
     featured: true,
   });
 
@@ -24,7 +26,8 @@ export default async function Home() {
             </div>
           }
         >
-          <ProductsSwiper products={products} />
+          <h2 className="text-2xl font-bold mb-4">Produtos em destaque</h2>
+          <CatalogGrid products={products} />
         </Suspense>
       </Container>
     </>

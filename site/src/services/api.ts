@@ -1,4 +1,5 @@
 import { mockApi } from '@/mocks/api';
+import { ApiListResponse, ApiResponse } from '@/types/api-response';
 
 const delay = (min = 200, max = 500) => {
   const time = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -23,32 +24,32 @@ const enhanceHeaders = async (headers?: HeadersInit): Promise<HeadersInit> => {
   };
 };
 
-export const get = async <ResponseType = unknown>(
+export const get = async <T extends ApiResponse<unknown> | ApiListResponse<unknown>>(
   url: string,
   query?: PayloadType,
   headers?: HeadersInit
-): Promise<ResponseType> => {
+): Promise<T> => {
   await delay();
-  const finalHeaders = await enhanceHeaders(headers);
+  await enhanceHeaders(headers);
 
-  const data = findData(url, query, headers);
+  const result = findData(url, query, headers);
 
-  if (!data) {
+  if (result === undefined || result === null) {
     throw new Error(`Mock for GET ${url} not found`);
   }
-  return data as ResponseType;
+  return result as T;
 };
 
-export const post = async <ResponseType = unknown, ResponseBody = unknown>(
+export const post = async <T extends ApiResponse<unknown> | ApiListResponse<unknown> = ApiResponse<unknown>>(
   url: string,
   body?: PayloadType,
   headers?: HeadersInit
-): Promise<ResponseType> => {
+): Promise<T> => {
   await delay();
-  const finalHeaders = await enhanceHeaders(headers);
-  const data = findData(url, body, headers);
-  if (!data) throw new Error(`Mock for POST ${url} not found`);
-  return data as ResponseType;
+  await enhanceHeaders(headers);
+  const result = findData(url, body, headers);
+  if (result === undefined || result === null) throw new Error(`Mock for POST ${url} not found`);
+  return result as T;
 };
 
 export const put = async <ResponseType = unknown, ResponseBody = unknown>(
