@@ -1,5 +1,6 @@
 import { AuthProvider } from '@/contexts/AuthContext';
 import Header from '@/components/header';
+import { AppShell } from '@/components/layout/AppShell';
 import { Inter } from 'next/font/google';
 
 import './globals.css';
@@ -18,8 +19,10 @@ export default async function RootLayout({
     <html suppressHydrationWarning className={inter.variable}>
       <body suppressHydrationWarning>
         <AuthProvider>
+          <div className="hidden md:block">
             <Header />
-            {children}
+          </div>
+          <AppShell>{children}</AppShell>
         </AuthProvider>
       </body>
     </html>

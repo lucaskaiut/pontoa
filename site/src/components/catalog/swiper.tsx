@@ -13,22 +13,25 @@ interface ProductsSwiperProps {
   products: Product[];
 }
 
+const slidesByBreakpoint: Record<string, number> = {
+  sm: 1,
+  md: 2,
+  lg: 3,
+  xl: 3,
+};
+
 export function ProductsSwiper({ products }: ProductsSwiperProps) {
   const breakpoint = useBreakpoint();
-  const slidesPerView = breakpoint === 'sm' ? 1 : 3;
+  const slidesPerView = slidesByBreakpoint[breakpoint] ?? 1;
   return (
     <Swiper
       modules={[Navigation]}
-      spaceBetween={45}
+      spaceBetween={16}
       slidesPerView={slidesPerView}
       navigation
       pagination={{ clickable: true }}
-      style={{
-        width: '100%',
-        paddingBottom: '40px',
-        paddingLeft: '10px',
-        paddingRight: '30px',
-      }}
+      className="pb-12! px-1! sm:px-2! md:px-4!"
+      style={{ width: '100%' }}
     >
       {products.map((product) => (
         <SwiperSlide key={product.id}>

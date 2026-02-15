@@ -7,7 +7,7 @@ import { menuItems } from '@/config/menu';
 
 export default async function Header() {
   return (
-    <header className="bg-primary text-slate-900 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 w-full bg-primary text-slate-900">
       <Container className="py-3">
         <div className="flex flex-col w-full gap-3 sm:gap-4">
           <div className="flex w-full flex-wrap items-center justify-between gap-2 sm:gap-4">
