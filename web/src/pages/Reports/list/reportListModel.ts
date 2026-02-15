@@ -1,0 +1,196 @@
+import { useQuery } from "@tanstack/react-query";
+import { useState, useMemo } from "react";
+import { reportService } from "../../../services/reportService";
+import { userService } from "../../../services/userService";
+import { serviceService } from "../../../services/serviceService";
+import { customerService } from "../../../services/customerService";
+import { RevenueReportFilters, RevenueReportData, RevenueReportItem, RevenueReportGroupedItem, RevenueReportTotals } from "../types";
+import { User } from "../../Users/types";
+import { Service } from "../../Services/types";
+import { Customer } from "../../Customers/types";
+
+interface UseReportListReturn {
+  reportData: RevenueReportData;
+  isLoading: boolean;
+  filters: RevenueReportFilters;
+  appliedFilters: RevenueReportFilters | null;
+  setFilter: (key: keyof RevenueReportFilters, value: any) => void;
+  applyFilters: () => void;
+  totals: RevenueReportTotals;
+  users: User[];
+  services: Service[];
+  customers: Customer[];
+  isLoadingUsers: boolean;
+  isLoadingServices: boolean;
+  isLoadingCustomers: boolean;
+}
+
+export function useReportList(): UseReportListReturn {
+  const [filters, setFilters] = useState<RevenueReportFilters>({
+    group_by: '',
+    date_start_at: '',
+    date_end_at: '',
+    user_id: '',
+    service_id: '',
+  });
+
+  const [appliedFilters, setAppliedFilters] = useState<RevenueReportFilters | null>(null);
+  const [hasAppliedFilters, setHasAppliedFilters] = useState(false);
+
+  const { data: reportData = [], isLoading } = useQuery<RevenueReportData>({
+    queryKey: ["revenue-report", appliedFilters],
+    queryFn: async () => {
+      const filtersToUse = appliedFilters || {};
+      const result = await reportService.getRevenue(filtersToUse);
+      return (result || []) as RevenueReportData;
+    },
+    enabled: hasAppliedFilters,
+  });
+
+  const { data: usersData, isLoading: isLoadingUsers } = useQuery<any>({
+    queryKey: ["users-collaborators"],
+    queryFn: async () => {
+      const result = await userService.list({ is_collaborator: true });
+      return result;
+    },
+  });
+
+  const users = useMemo(() => {
+    if (!usersData) return [];
+    if (Array.isArray(usersData)) return usersData;
+    if (usersData.data && Array.isArray(usersData.data)) return usersData.data;
+    return [];
+  }, [usersData]);
+
+  const { data: servicesData, isLoading: isLoadingServices } = useQuery<any>({
+    queryKey: ["services"],
+    queryFn: async () => {
+      const result = await serviceService.list();
+      return result;
+    },
+  });
+
+  const services = useMemo(() => {
+    if (!servicesData) return [];
+    if (Array.isArray(servicesData)) return servicesData;
+    if (servicesData.data && Array.isArray(servicesData.data)) return servicesData.data;
+    return [];
+  }, [servicesData]);
+
+  const { data: customersData, isLoading: isLoadingCustomers } = useQuery<any>({
+    queryKey: ["customers"],
+    queryFn: async () => {
+      const result = await customerService.list();
+      return result;
+    },
+  });
+
+  const customers = useMemo(() => {
+    if (!customersData) return [];
+    if (Array.isArray(customersData)) return customersData;
+    if (customersData.data && Array.isArray(customersData.data)) return customersData.data;
+    return [];
+  }, [customersData]);
+
+  const setFilter = (key: keyof RevenueReportFilters, value: any): void => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  };
+
+  const applyFilters = (): void => {
+    const newFilters: RevenueReportFilters = {};
+
+    if (filters.group_by) {
+      newFilters.group_by = filters.group_by;
+    }
+
+    if (filters.date_start_at) {
+      newFilters.date_start_at = filters.date_start_at;
+    }
+
+    if (filters.date_end_at) {
+      newFilters.date_end_at = filters.date_end_at;
+    }
+
+    if (filters.user_id) {
+      newFilters.user_id = filters.user_id;
+    }
+
+    if (filters.service_id) {
+      newFilters.service_id = filters.service_id;
+    }
+
+    setAppliedFilters(newFilters);
+    setHasAppliedFilters(true);
+  };
+
+  const totals = useMemo((): RevenueReportTotals => {
+    if (!reportData || reportData.length === 0) {
+      return {
+        totalPrice: 0,
+        totalCost: 0,
+        totalProfit: 0,
+        totalCount: 0,
+      };
+    }
+
+    if (appliedFilters?.group_by) {
+      const groupedData = reportData as RevenueReportGroupedItem[];
+      const totalPrice = groupedData.reduce((sum, item) => sum + (typeof item.price === 'number' ? item.price : parseFloat(String(item.price)) || 0), 0);
+      const totalCost = groupedData.reduce((sum, item) => sum + (typeof item.cost === 'number' ? item.cost : parseFloat(String(item.cost)) || 0), 0);
+      const totalCount = groupedData.reduce((sum, item) => sum + (item.count || 0), 0);
+      return {
+        totalPrice,
+        totalCost,
+        totalProfit: totalPrice - totalCost,
+        totalCount,
+      };
+    } else {
+      const items = reportData as RevenueReportItem[];
+      const totalPrice = items.reduce((sum, item) => sum + (typeof item.price === 'number' ? item.price : parseFloat(String(item.price)) || 0), 0);
+      const totalCost = items.reduce((sum, item) => sum + (typeof item.cost === 'number' ? item.cost : parseFloat(String(item.cost)) || 0), 0);
+      return {
+        totalPrice,
+        totalCost,
+        totalProfit: totalPrice - totalCost,
+        totalCount: items.length,
+      };
+    }
+  }, [reportData, appliedFilters?.group_by]);
+
+  const enrichedReportData = useMemo(() => {
+    if (!reportData || reportData.length === 0 || appliedFilters?.group_by) {
+      return reportData;
+    }
+
+    const items = reportData as RevenueReportItem[];
+    return items.map(item => {
+      const customer = item.customer_id ? customers.find(c => c.id === item.customer_id) : null;
+      const service = item.service_id ? services.find(s => s.id === item.service_id) : null;
+      const user = item.user_id ? users.find(u => u.id === item.user_id) : null;
+
+      return {
+        ...item,
+        customer: customer ? { id: customer.id!, name: customer.name } : item.customer,
+        service: service ? { id: service.id!, name: service.name } : item.service,
+        user: user ? { id: user.id!, name: user.name } : item.user,
+      };
+    });
+  }, [reportData, customers, services, users, appliedFilters?.group_by]);
+
+  return {
+    reportData: enrichedReportData,
+    isLoading,
+    filters,
+    appliedFilters,
+    setFilter,
+    applyFilters,
+    totals,
+    users,
+    services,
+    customers,
+    isLoadingUsers,
+    isLoadingServices,
+    isLoadingCustomers,
+  };
+}
+
